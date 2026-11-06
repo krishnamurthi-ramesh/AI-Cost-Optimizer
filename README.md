@@ -12,7 +12,7 @@
 
 ---
 
-## 🎯 Executive Summary & One-Line Pitch
+## 🎯 Executive Summary 
 
 Between 2024 and 2026, software companies rushed GenAI copilots into production. But as active usage scaled, software gross margins collapsed from **80%+ down to 54%** because teams defaulted to routing 100% of queries to expensive frontier models (Claude 3.5 Sonnet, GPT-4o).
 
