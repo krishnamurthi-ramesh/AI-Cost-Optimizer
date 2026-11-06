@@ -49,3 +49,4 @@ These qualitative findings directly shaped the functional scope of the **Semanti
 2. **Transparent Latency Gains:** The system must highlight P95 latency improvements alongside dollar savings to win engineering buy-in.
 3. **Interactive Scenario Modeling:** Finance and product leadership require interactive controls (DAU, queries/user, cache hit rate, escalation rate) to forecast P&L impact under diverse growth curves.
 4. **Zero-Code Switchability:** Router must conform to standard OpenAI/Anthropic API request/response specifications to prevent engineering refactors.
+

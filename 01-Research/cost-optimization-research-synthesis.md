@@ -122,3 +122,4 @@ Instead of speculative execution (which runs models in parallel and increases to
 5. **Amazon Web Services:** *"Intelligent Prompt Routing in Amazon Bedrock"* — [aws.amazon.com/bedrock](https://aws.amazon.com/bedrock)
 6. **LMSYS Organization:** *"Chatbot Arena: Cross-Model Capability Benchmarks across 1M Conversations"* — [chat.lmsys.org](https://chat.lmsys.org)
 7. **Groq Inc:** *"Llama 3.3 70B LPUs and Token Economics"* — [groq.com/pricing](https://groq.com/pricing)
+

@@ -124,3 +124,4 @@ Strategy C (Cascading Router):
 3. **Growth / Pre-IPO ($25M+ ARR, 200k+ DAU):**
    - Transition from LLM-classifier (Flash-Lite) to an in-house fine-tuned RoBERTa or modern embedding classifier.
    - Cuts classification latency from 80ms down to 18ms and drops classifier cost to zero.
+
