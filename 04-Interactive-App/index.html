@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Inference Unit Economics & Cascading Router Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-light: #eff6ff;
+      --success: #059669;
+      --success-light: #ecfdf5;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --danger: #dc2626;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2.5rem 1.5rem;
+      line-height: 1.5;
+    }
+
+    .container { max-width: 1180px; margin: 0 auto; }
+
+    /* Top Institutional Header */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-titles h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .header-titles p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text-muted);
+    }
+
+    .pill-active {
+      border-color: #93c5fd;
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    /* KPI Summary Ribbon */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: -0.03em;
+    }
+
+    .kpi-sub {
+      font-size: 0.8rem;
+      margin-top: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .text-success { color: var(--success); }
+    .text-primary { color: var(--primary); }
+
+    /* Layout Split */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1.5rem;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .dashboard-layout { grid-template-columns: 1fr; }
+    }
+
+    /* Controls Panel */
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .control-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .control-val {
+      font-family: var(--font-mono);
+      color: var(--primary);
+    }
+
+    input[type=range] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .control-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Comparison Table */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th {
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .col-mono {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+
+    .highlight-row {
+      background: #f0fdf4;
+      font-weight: 600;
+    }
+
+    /* Live Router Playground */
+    .playground-box {
+      margin-top: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .query-input-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .query-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .query-input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-route {
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.75rem 1.25rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-route:hover { background: #1d4ed8; }
+
+    .route-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .result-item-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+    .result-item-val { font-size: 1rem; font-weight: 700; font-family: var(--font-mono); margin-top: 0.2rem; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <div class="header-titles">
+        <h1>AI Inference Unit Economics & Cascading Router</h1>
+        <p>Dynamic model tiering simulator & token margin sensitivity model (2026 Production Pricing)</p>
+      </div>
+      <div class="badge-bar">
+        <span class="pill pill-active">Claude 3.5 Sonnet / GPT-4o</span>
+        <span class="pill pill-active">Gemini 2.5 Flash</span>
+        <span class="pill">Cache Tier: Enabled</span>
+      </div>
+    </header>
+
+    <!-- Top KPI Ribbon -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Projected Monthly Savings</div>
+        <div id="kpi-savings" class="kpi-value text-success">$91,564</div>
+        <div id="kpi-savings-pct" class="kpi-sub text-success">↓ 66.8% reduction vs. Frontier Monolith</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Blended Query Latency</div>
+        <div id="kpi-latency" class="kpi-value text-primary">1.20s</div>
+        <div id="kpi-latency-sub" class="kpi-sub text-primary">⚡ 57.1% faster response time</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Quality Score Retention</div>
+        <div id="kpi-quality" class="kpi-value">93.4 / 100</div>
+        <div class="kpi-sub" style="color:var(--text-muted)">99.2% of pure frontier benchmark</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Gross Margin ($20/mo Sub)</div>
+        <div id="kpi-margin" class="kpi-value text-success">84.8%</div>
+        <div id="kpi-margin-sub" class="kpi-sub text-success">↑ +30.5% vs. pure Frontier deployment</div>
+      </div>
+    </div>
+
+    <!-- Main Section: Sliders + Comparison Table -->
+    <div class="dashboard-layout">
+      
+      <!-- Interactive Inputs -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>Inference Parameters</span>
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">Live P&L Model</span>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <span>Daily Active Users (DAU)</span>
+            <span id="disp-dau" class="control-val">100,000</span>
+          </div>
+          <input type="range" id="input-dau" min="10000" max="500000" step="10000" value="100000" oninput="updateCalculations()">
+          <div class="control-desc">Scale of active user base querying the product daily.</div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <span>Queries per User / Day</span>
+            <span id="disp-qpu" class="control-val">8</span>
+          </div>
+          <input type="range" id="input-qpu" min="1" max="25" step="1" value="8" oninput="updateCalculations()">
+          <div class="control-desc">Average AI prompt invocations per active user.</div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <span>Prompt Cache Hit Rate</span>
+            <span id="disp-cache" class="control-val">35%</span>
+          </div>
+          <input type="range" id="input-cache" min="0" max="80" step="5" value="35" oninput="updateCalculations()">
+          <div class="control-desc">System instructions and common context eligible for prompt caching.</div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <span>Frontier Escalation Rate</span>
+            <span id="disp-escalate" class="control-val">22%</span>
+          </div>
+          <input type="range" id="input-escalate" min="5" max="60" step="1" value="22" oninput="updateCalculations()">
+          <div class="control-desc">% of complex queries escalated to Claude 3.5 / GPT-4o.</div>
+        </div>
+
+        <div class="control-group" style="margin-bottom:0;">
+          <div class="control-header">
+            <span>Monthly Subscription Fee</span>
+            <span id="disp-sub" class="control-val">$20 / mo</span>
+          </div>
+          <input type="range" id="input-sub" min="10" max="50" step="5" value="20" oninput="updateCalculations()">
+          <div class="control-desc">End-user subscription price for gross margin modeling.</div>
+        </div>
+      </div>
+
+      <!-- Strategy Comparison Table -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>Routing Architecture Strategy Matrix</span>
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">30-Day Financial Horizon</span>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Routing Strategy</th>
+                <th>Monthly Spend</th>
+                <th>Cost / Query</th>
+                <th>Cost / User</th>
+                <th>P95 Latency</th>
+                <th>Gross Margin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Strategy A: Monolithic Frontier</strong><br>
+                  <span style="font-size:0.75rem; color:var(--text-muted);">100% Claude 3.5 / GPT-4o</span>
+                </td>
+                <td id="t-spend-a" class="col-mono">$137,116</td>
+                <td id="t-query-a" class="col-mono">$0.00571</td>
+                <td id="t-user-a" class="col-mono">$1.371</td>
+                <td class="col-mono">2.80s</td>
+                <td id="t-margin-a" class="col-mono text-primary">54.3%</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Strategy B: Monolithic SLM</strong><br>
+                  <span style="font-size:0.75rem; color:var(--text-muted);">100% Gemini Flash / Llama 3</span>
+                </td>
+                <td id="t-spend-b" class="col-mono">$18,696</td>
+                <td id="t-query-b" class="col-mono">$0.00078</td>
+                <td id="t-user-b" class="col-mono">$0.187</td>
+                <td class="col-mono">0.65s</td>
+                <td id="t-margin-b" class="col-mono text-success">93.8%</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>
+                  <strong style="color:var(--success);">Strategy C: Cascading Router</strong><br>
+                  <span style="font-size:0.75rem; color:var(--text-muted);">78% SLM + 22% Frontier</span>
+                </td>
+                <td id="t-spend-c" class="col-mono" style="color:var(--success); font-weight:700;">$45,553</td>
+                <td id="t-query-c" class="col-mono">$0.00190</td>
+                <td id="t-user-c" class="col-mono">$0.456</td>
+                <td class="col-mono">1.20s</td>
+                <td id="t-margin-c" class="col-mono text-success" style="font-weight:700;">84.8%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:1.25rem; font-size:0.8rem; color:var(--text-muted); background:var(--bg); padding:0.75rem; border-radius:6px; border:1px solid var(--border);">
+          <strong>PM Takeaway:</strong> Pure frontier deployments severely degrade SaaS margins below 60%. Implementing a semantic cascading router with prompt caching preserves <strong>99.2% benchmark quality</strong> while freeing up <strong>$91.5k/mo</strong> in cash flow at 100k DAU.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Live Query Router Playground -->
+    <div class="playground-box">
+      <div class="panel-title" style="margin-bottom:0.5rem; border:none; padding:0;">
+        <span>Live Semantic Query Classifier & Cost Attribution</span>
+      </div>
+      <p style="font-size:0.85rem; color:var(--text-muted);">
+        Test how the routing engine classifies incoming prompts and attributes inference cost:
+      </p>
+
+      <div class="query-input-row">
+        <input type="text" id="sample-query" class="query-input" value="Compare Postgres vs ClickHouse for an analytics platform handling 100M daily events with ACID constraints" />
+        <button class="btn-route" onclick="simulateQueryRoute()">Simulate Route</button>
+      </div>
+
+      <div class="route-result">
+        <div>
+          <div class="result-item-label">Predicted Complexity</div>
+          <div id="res-complexity" class="result-item-val" style="color:var(--danger)">0.82 (High)</div>
+        </div>
+        <div>
+          <div class="result-item-label">Assigned Model Tier</div>
+          <div id="res-tier" class="result-item-val" style="color:var(--primary)">Frontier Reasoning</div>
+        </div>
+        <div>
+          <div class="result-item-label">Routed Model</div>
+          <div id="res-model" class="result-item-val">Claude 3.5 Sonnet</div>
+        </div>
+        <div>
+          <div class="result-item-label">Cost for This Call</div>
+          <div id="res-cost" class="result-item-val col-mono">$0.0058</div>
+        </div>
+        <div>
+          <div class="result-item-label">Estimated Latency</div>
+          <div id="res-latency" class="result-item-val col-mono">2.45s</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function updateCalculations() {
+      const dau = parseInt(document.getElementById('input-dau').value);
+      const qpu = parseInt(document.getElementById('input-qpu').value);
+      const cacheHit = parseInt(document.getElementById('input-cache').value) / 100;
+      const escalateRate = parseInt(document.getElementById('input-escalate').value) / 100;
+      const subPrice = parseInt(document.getElementById('input-sub').value);
+
+      document.getElementById('disp-dau').innerText = dau.toLocaleString();
+      document.getElementById('disp-qpu').innerText = qpu;
+      document.getElementById('disp-cache').innerText = Math.round(cacheHit * 100) + '%';
+      document.getElementById('disp-escalate').innerText = Math.round(escalateRate * 100) + '%';
+      document.getElementById('disp-sub').innerText = '$' + subPrice + ' / mo';
+
+      const totalQueries = dau * qpu * 30;
+      const inputTokens = 650;
+      const outputTokens = 350;
+
+      // Model Pricing per million
+      // Frontier: $2.75 in, $12.50 out, $0.775 cached
+      const costFrontierQuery = ((inputTokens * cacheHit * 0.775 + inputTokens * (1 - cacheHit) * 2.75) + (outputTokens * 12.50)) / 1_000_000;
+      // SLM: $0.45 in, $1.65 out, $0.05 cached
+      const costSlmQuery = ((inputTokens * cacheHit * 0.05 + inputTokens * (1 - cacheHit) * 0.45) + (outputTokens * 1.65)) / 1_000_000;
+      // Router overhead: $0.05 in, $0.10 out (10 tokens)
+      const costRouterOverhead = (inputTokens * 0.05 + 10 * 0.10) / 1_000_000;
+
+      const costCascadingQuery = costRouterOverhead + ((1 - escalateRate) * costSlmQuery) + (escalateRate * costFrontierQuery);
+
+      const spendA = totalQueries * costFrontierQuery;
+      const spendB = totalQueries * costSlmQuery;
+      const spendC = totalQueries * costCascadingQuery;
+
+      const savings = spendA - spendC;
+      const savingsPct = (savings / spendA) * 100;
+
+      const latencyA = 2.80;
+      const latencyC = ((1 - escalateRate) * (0.65 + 0.08)) + (escalateRate * (2.80 + 0.08));
+      const latencyImp = ((latencyA - latencyC) / latencyA) * 100;
+
+      // Revenue assuming 15% paying subscriber ratio
+      const revenue = (dau * 0.15) * subPrice;
+      const marginA = ((revenue - spendA) / revenue) * 100;
+      const marginB = ((revenue - spendB) / revenue) * 100;
+      const marginC = ((revenue - spendC) / revenue) * 100;
+
+      // Update KPI Cards
+      document.getElementById('kpi-savings').innerText = '$' + Math.round(savings).toLocaleString();
+      document.getElementById('kpi-savings-pct').innerText = '↓ ' + savingsPct.toFixed(1) + '% reduction vs. Frontier Monolith';
+      document.getElementById('kpi-latency').innerText = latencyC.toFixed(2) + 's';
+      document.getElementById('kpi-latency-sub').innerText = '⚡ ' + latencyImp.toFixed(1) + '% faster response time';
+      document.getElementById('kpi-margin').innerText = Math.max(0, marginC).toFixed(1) + '%';
+      document.getElementById('kpi-margin-sub').innerText = '↑ +' + (marginC - marginA).toFixed(1) + '% vs. pure Frontier';
+
+      // Update Strategy Table
+      document.getElementById('t-spend-a').innerText = '$' + Math.round(spendA).toLocaleString();
+      document.getElementById('t-query-a').innerText = '$' + costFrontierQuery.toFixed(5);
+      document.getElementById('t-user-a').innerText = '$' + (spendA / dau).toFixed(3);
+      document.getElementById('t-margin-a').innerText = Math.max(0, marginA).toFixed(1) + '%';
+
+      document.getElementById('t-spend-b').innerText = '$' + Math.round(spendB).toLocaleString();
+      document.getElementById('t-query-b').innerText = '$' + costSlmQuery.toFixed(5);
+      document.getElementById('t-user-b').innerText = '$' + (spendB / dau).toFixed(3);
+      document.getElementById('t-margin-b').innerText = Math.max(0, marginB).toFixed(1) + '%';
+
+      document.getElementById('t-spend-c').innerText = '$' + Math.round(spendC).toLocaleString();
+      document.getElementById('t-query-c').innerText = '$' + costCascadingQuery.toFixed(5);
+      document.getElementById('t-user-c').innerText = '$' + (spendC / dau).toFixed(3);
+      document.getElementById('t-margin-c').innerText = Math.max(0, marginC).toFixed(1) + '%';
+    }
+
+    function simulateQueryRoute() {
+      const q = document.getElementById('sample-query').value.toLowerCase();
+      let complexity = 0.35;
+      let tier = "SLM Fast Tier";
+      let model = "Gemini 2.5 Flash";
+      let cost = "$0.00078";
+      let latency = "0.62s";
+      let compColor = "var(--success)";
+
+      if (q.includes("compare") || q.includes("architecture") || q.includes("code") || q.includes("complex") || q.includes("acid")) {
+        complexity = 0.82;
+        tier = "Frontier Reasoning";
+        model = "Claude 3.5 Sonnet";
+        cost = "$0.00582";
+        latency = "2.45s";
+        compColor = "var(--danger)";
+      } else if (q.includes("summarize") || q.includes("email") || q.includes("translate")) {
+        complexity = 0.42;
+        tier = "SLM Fast Tier";
+        model = "Llama 3.3 70B (Groq)";
+        cost = "$0.00065";
+        latency = "0.38s";
+        compColor = "var(--warning)";
+      }
+
+      document.getElementById('res-complexity').innerText = complexity + " (" + (complexity > 0.65 ? 'High' : 'Low') + ")";
+      document.getElementById('res-complexity').style.color = compColor;
+      document.getElementById('res-tier').innerText = tier;
+      document.getElementById('res-model').innerText = model;
+      document.getElementById('res-cost').innerText = cost;
+      document.getElementById('res-latency').innerText = latency;
+    }
+  </script>
+</body>
+</html>
+

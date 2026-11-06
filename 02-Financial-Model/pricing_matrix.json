@@ -1,0 +1,56 @@
+{
+  "last_updated": "2026-11",
+  "models": {
+    "claude-3-5-sonnet": {
+      "provider": "Anthropic",
+      "tier": "Frontier Heavy Reasoning",
+      "input_cost_per_m": 3.00,
+      "output_cost_per_m": 15.00,
+      "cached_input_cost_per_m": 0.30,
+      "avg_latency_ttft_ms": 780,
+      "tps": 65,
+      "task_suitability": ["Multi-step reasoning", "Complex coding", "Legal/compliance review", "Ambiguous logic"]
+    },
+    "gpt-4o": {
+      "provider": "OpenAI",
+      "tier": "Frontier Multimodal",
+      "input_cost_per_m": 2.50,
+      "output_cost_per_m": 10.00,
+      "cached_input_cost_per_m": 1.25,
+      "avg_latency_ttft_ms": 650,
+      "tps": 85,
+      "task_suitability": ["Data analysis", "Complex agent tool calling", "Nuanced extraction"]
+    },
+    "gemini-2-5-flash": {
+      "provider": "Google",
+      "tier": "High-Efficiency Workhorse",
+      "input_cost_per_m": 0.30,
+      "output_cost_per_m": 2.50,
+      "cached_input_cost_per_m": 0.03,
+      "avg_latency_ttft_ms": 290,
+      "tps": 140,
+      "task_suitability": ["Factual retrieval", "Text transformation", "Summarization", "Initial classification"]
+    },
+    "llama-3-3-70b-groq": {
+      "provider": "Groq / Meta",
+      "tier": "Ultra-Fast Open Weight",
+      "input_cost_per_m": 0.59,
+      "output_cost_per_m": 0.79,
+      "cached_input_cost_per_m": 0.59,
+      "avg_latency_ttft_ms": 180,
+      "tps": 280,
+      "task_suitability": ["High-throughput extraction", "Real-time streaming", "Structured JSON formatting"]
+    },
+    "gemini-flash-lite": {
+      "provider": "Google",
+      "tier": "Ultra-Budget SLM",
+      "input_cost_per_m": 0.10,
+      "output_cost_per_m": 0.40,
+      "cached_input_cost_per_m": 0.01,
+      "avg_latency_ttft_ms": 190,
+      "tps": 220,
+      "task_suitability": ["Simple intent classification", "Spam filtering", "Keyword tagging"]
+    }
+  }
+}
+
