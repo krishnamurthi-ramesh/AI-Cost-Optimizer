@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Inference Unit Economics & Cascading Router Simulator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --bg: #f8fafc;
@@ -25,7 +28,12 @@
       --font-mono: 'JetBrains Mono', monospace;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background-color: var(--bg);
       color: var(--text);
@@ -34,7 +42,10 @@
       line-height: 1.5;
     }
 
-    .container { max-width: 1180px; margin: 0 auto; }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
 
     /* Top Institutional Header */
     header {
@@ -95,7 +106,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1.25rem;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
     }
 
     .kpi-label {
@@ -122,8 +133,13 @@
       gap: 0.35rem;
     }
 
-    .text-success { color: var(--success); }
-    .text-primary { color: var(--primary); }
+    .text-success {
+      color: var(--success);
+    }
+
+    .text-primary {
+      color: var(--primary);
+    }
 
     /* Layout Split */
     .dashboard-layout {
@@ -135,7 +151,9 @@
     }
 
     @media (max-width: 900px) {
-      .dashboard-layout { grid-template-columns: 1fr; }
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* Controls Panel */
@@ -144,7 +162,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1.5rem;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
     }
 
     .panel-title {
@@ -191,7 +209,7 @@
       border-radius: 50%;
       background: var(--primary);
       cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     }
 
     .control-desc {
@@ -228,7 +246,9 @@
       border-bottom: 1px solid var(--border);
     }
 
-    tr:last-child td { border-bottom: none; }
+    tr:last-child td {
+      border-bottom: none;
+    }
 
     .col-mono {
       font-family: var(--font-mono);
@@ -280,7 +300,9 @@
       cursor: pointer;
     }
 
-    .btn-route:hover { background: #1d4ed8; }
+    .btn-route:hover {
+      background: #1d4ed8;
+    }
 
     .route-result {
       margin-top: 1rem;
@@ -293,14 +315,25 @@
       gap: 1rem;
     }
 
-    .result-item-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
-    .result-item-val { font-size: 1rem; font-weight: 700; font-family: var(--font-mono); margin-top: 0.2rem; }
+    .result-item-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .result-item-val {
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      margin-top: 0.2rem;
+    }
   </style>
 </head>
+
 <body>
 
   <div class="container">
-    
+
     <!-- Header -->
     <header>
       <div class="header-titles">
@@ -340,7 +373,7 @@
 
     <!-- Main Section: Sliders + Comparison Table -->
     <div class="dashboard-layout">
-      
+
       <!-- Interactive Inputs -->
       <div class="panel">
         <div class="panel-title">
@@ -353,7 +386,8 @@
             <span>Daily Active Users (DAU)</span>
             <span id="disp-dau" class="control-val">100,000</span>
           </div>
-          <input type="range" id="input-dau" min="10000" max="500000" step="10000" value="100000" oninput="updateCalculations()">
+          <input type="range" id="input-dau" min="10000" max="500000" step="10000" value="100000"
+            oninput="updateCalculations()">
           <div class="control-desc">Scale of active user base querying the product daily.</div>
         </div>
 
@@ -451,8 +485,11 @@
           </table>
         </div>
 
-        <div style="margin-top:1.25rem; font-size:0.8rem; color:var(--text-muted); background:var(--bg); padding:0.75rem; border-radius:6px; border:1px solid var(--border);">
-          <strong>PM Takeaway:</strong> Pure frontier deployments severely degrade SaaS margins below 60%. Implementing a semantic cascading router with prompt caching preserves <strong>99.2% benchmark quality</strong> while freeing up <strong>$91.5k/mo</strong> in cash flow at 100k DAU.
+        <div
+          style="margin-top:1.25rem; font-size:0.8rem; color:var(--text-muted); background:var(--bg); padding:0.75rem; border-radius:6px; border:1px solid var(--border);">
+          <strong>PM Takeaway:</strong> Pure frontier deployments severely degrade SaaS margins below 60%. Implementing
+          a semantic cascading router with prompt caching preserves <strong>99.2% benchmark quality</strong> while
+          freeing up <strong>$91.5k/mo</strong> in cash flow at 100k DAU.
         </div>
       </div>
 
@@ -468,7 +505,8 @@
       </p>
 
       <div class="query-input-row">
-        <input type="text" id="sample-query" class="query-input" value="Compare Postgres vs ClickHouse for an analytics platform handling 100M daily events with ACID constraints" />
+        <input type="text" id="sample-query" class="query-input"
+          value="Compare Postgres vs ClickHouse for an analytics platform handling 100M daily events with ACID constraints" />
         <button class="btn-route" onclick="simulateQueryRoute()">Simulate Route</button>
       </div>
 
@@ -602,5 +640,5 @@
     }
   </script>
 </body>
-</html>
 
+</html>

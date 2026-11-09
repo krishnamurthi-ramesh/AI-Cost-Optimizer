@@ -115,3 +115,4 @@ For Series A to Growth-stage SaaS products handling proprietary user data:
 1. **Build the In-House Cascading Router:** Deploy our lightweight classification layer and confidence-gated fallback architecture within the core application boundary.
 2. **Eliminate Intermediary Fees:** Avoid giving 10%–20% of net token savings to third-party routing startups.
 3. **Control the Fallback Loop:** Implement domain-specific schema compliance and token entropy checks that generic routers cannot perform.
+
