@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/04-Interactive-App/index.html"
+    }
+  ]
+}
